@@ -91,7 +91,7 @@ export function StatusPill({ children, tone = "neutral" }: { children: React.Rea
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium",
+        "inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium",
         tone === "neutral" && "bg-muted text-muted-foreground",
         tone === "good" && "bg-success/10 text-success",
         tone === "warn" && "bg-warning/15 text-[oklch(0.45_0.11_60)]",
