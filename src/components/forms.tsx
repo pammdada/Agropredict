@@ -114,10 +114,10 @@ export function FieldError({ name }: { name: string }) {
   return error ? <p className="text-xs text-destructive">{error}</p> : null;
 }
 
-export function SubmitButton({ children, className, ...props }: React.ComponentProps<typeof Button>) {
+export function SubmitButton({ children, className, disabled, ...props }: React.ComponentProps<typeof Button>) {
   const { pending } = useFormCtx();
   return (
-    <Button type="submit" disabled={pending} className={className} {...props}>
+    <Button type="submit" disabled={pending || disabled} className={className} {...props}>
       {pending && <Loader2 className="animate-spin" />}
       {children}
     </Button>
