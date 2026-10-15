@@ -10,6 +10,9 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Planes y precios" };
 
+// Prices are edited by the superadmin at runtime, so never prerender.
+export const dynamic = "force-dynamic";
+
 const lim = (n: number, unit: string) => (n === -1 ? `${unit} ilimitados` : `Hasta ${n.toLocaleString("es-PE")} ${unit}`);
 
 export default async function PricingPage() {
