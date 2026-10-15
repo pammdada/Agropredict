@@ -119,7 +119,7 @@ function runYield(input: SimulationInput, rnd: () => number): SimulationResult {
   if (drop <= -15) {
     actions.push({
       title: "Renegociar volúmenes comprometidos con compradores",
-      detail: `Ajustar contratos al escenario central (${scenarios[1].value} t/ha) y dejar 10 % de holgura frente al pesimista.`,
+      detail: `Ajustar contratos al escenario central (${scenarios[1].value.toFixed(1)} t/ha) y dejar 10 % de holgura frente al pesimista.`,
       priority: "alta",
     });
     actions.push({
@@ -145,7 +145,7 @@ function runYield(input: SimulationInput, rnd: () => number): SimulationResult {
     detail:
       drop > -5
         ? "El impacto esperado es bajo: confirmar programas comerciales con el volumen central."
-        : `Proyectar ingresos con ${scenarios[2].value} t/ha para asegurar liquidez de la campaña.`,
+        : `Proyectar ingresos con ${scenarios[2].value.toFixed(1)} t/ha para asegurar liquidez de la campaña.`,
     priority: "baja",
   });
 

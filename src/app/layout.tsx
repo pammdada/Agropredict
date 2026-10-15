@@ -13,8 +13,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es-PE">
-      <body className={`${sans.variable} ${display.variable} antialiased`}>
+    <html lang="es-PE" className={`${sans.variable} ${display.variable}`}>
+      <body className="antialiased">
         {children}
         <Toaster richColors position="top-right" />
       </body>

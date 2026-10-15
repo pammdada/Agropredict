@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 
 function ResultPreview() {
   const rows = [
-    { label: "Optimista", value: "17,9", pct: 74, tone: "bg-success" },
-    { label: "Central", value: "14,6", pct: 60, tone: "bg-primary" },
-    { label: "Pesimista", value: "11,2", pct: 46, tone: "bg-critical" },
+    { label: "Optimista", value: "17.9", pct: 74, tone: "bg-success" },
+    { label: "Central", value: "14.6", pct: 60, tone: "bg-primary" },
+    { label: "Pesimista", value: "11.2", pct: 46, tone: "bg-critical" },
   ];
   return (
     <div className="relative rounded-2xl bg-card p-5 shadow-xl ring-1 ring-foreground/10 sm:p-6">
