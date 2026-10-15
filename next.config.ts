@@ -1,9 +1,11 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Native/WASM packages must be loaded by Node at runtime, not bundled.
   serverExternalPackages: ["@electric-sql/pglite", "@node-rs/argon2", "postgres"],
   poweredByHeader: false,
+  outputFileTracingRoot: path.join(__dirname),
   async headers() {
     return [
       {
