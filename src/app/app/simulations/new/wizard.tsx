@@ -234,7 +234,7 @@ export function Wizard({
                 <Input id="sim-name" className="h-9" value={name} onChange={(e) => setName(e.target.value)} placeholder="Se genera automáticamente si lo dejas vacío" />
               </div>
               <p className="text-xs text-muted-foreground">
-                El motor demo v0 es determinista: con los mismos parámetros obtendrás el mismo resultado. El resultado se rotulará como “Datos demo”.
+                Rendimiento de uva en Ica usa el modelo APF3 (Ridge) con datos sintéticos; cadena de frío y otros cultivos usan el motor demo v0. Con los mismos parámetros obtendrás el mismo resultado y el resultado se rotulará como datos sintéticos.
               </p>
             </>
           )}

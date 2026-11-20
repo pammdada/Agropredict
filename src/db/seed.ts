@@ -2,7 +2,7 @@ import { count } from "drizzle-orm";
 import type { DB } from "./index";
 import * as s from "./schema";
 import { hashPassword } from "../lib/auth/password";
-import { demoEngine } from "../lib/simulation/engine-v0";
+import { productionEngine } from "../lib/simulation/engine";
 import type { SimulationInput } from "../lib/simulation/contract";
 
 export const DEMO_DEFAULT_PASSWORD = "AgroDemo2026";
@@ -220,7 +220,7 @@ export async function seed(db: DB): Promise<void> {
         ? { code: corridor.code, name: corridor.name, distanceKm: corridor.distanceKm, transitHours: corridor.transitHours }
         : undefined,
     };
-    const result = demoEngine.run(input);
+    const result = productionEngine.run(input);
     const [sim] = await db
       .insert(s.simulations)
       .values({ orgId, userId, farmId: farm.id, type: input.type, name, input, result, modelVersion: result.modelVersion, createdAt })

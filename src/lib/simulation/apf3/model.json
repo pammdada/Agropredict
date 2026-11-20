@@ -1,0 +1,71 @@
+{
+  "version": "agropredic-apf3-ridge-v1.0",
+  "algorithm": "StandardScaler + Ridge(alpha=3.0)",
+  "target": "rend_t_ha",
+  "features": [
+    "temp_ene_abr",
+    "temp_may_jul",
+    "temp_ago_dic_prev",
+    "precip_ene_abr",
+    "precip_may_jul",
+    "temp_x_precip",
+    "rend_media_previa",
+    "hectareas"
+  ],
+  "means": [
+    0.32261510791366893,
+    0.1647290167865707,
+    0.1540014388489209,
+    2.229478417266186,
+    0.857122302158272,
+    1.8579916771582714,
+    15.472707734293799,
+    69.10071942446044
+  ],
+  "scales": [
+    0.5512199177473465,
+    0.25433221150751684,
+    0.24769901960741872,
+    2.1464634933562627,
+    0.4171783335943986,
+    3.5364289602339705,
+    0.9598043455257963,
+    28.583160249387074
+  ],
+  "coefficients": [
+    -0.3143848449660162,
+    -0.1650251288095701,
+    -0.04431466207680161,
+    -0.4345294061288235,
+    -0.030160218797781843,
+    -0.4591705911629156,
+    0.5339345384680583,
+    0.27993835773424963
+  ],
+  "intercept": 15.425611510791368,
+  "residuals": {
+    "q10": -0.631,
+    "q90": 1.37
+  },
+  "metrics": {
+    "maeValidation": 0.788,
+    "rmseValidation": 0.993,
+    "mapeValidation": 5.341,
+    "r2Validation": 0.746,
+    "maeTest": 0.628,
+    "rmseTest": 0.82,
+    "mapeTest": 4.012,
+    "r2Test": 0.823,
+    "coveragePct": 86.7
+  },
+  "training": {
+    "records": 139,
+    "farms": 6,
+    "campaigns": "2001-2026",
+    "missing": 0,
+    "duplicates": 0,
+    "meanYield": 15.43,
+    "stdYield": 1.68,
+    "source": "synthetic"
+  }
+}

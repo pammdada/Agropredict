@@ -56,7 +56,7 @@ export interface SimulationResult {
   segments?: { name: string; hours: number; lossPct: number }[];
   totals?: { label: string; value: number; unit: string }[];
   modelVersion: string;
-  dataQuality: "demo";
+  dataQuality: "demo" | "apf3_synthetic";
   generatedAt: string;
 }
 

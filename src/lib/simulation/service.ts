@@ -7,10 +7,10 @@ import { assertEntitlement } from "@/lib/billing/entitlements";
 import { UserError } from "@/lib/actions";
 import type { ClimateScenario, SimulationInput, SimulationKind, SimulationResult } from "./contract";
 import { CLIMATE_LABELS } from "./contract";
-import { demoEngine } from "./engine-v0";
+import { productionEngine } from "./engine";
 
-/** The engine is injected here; swapping in the APF3 model only changes this line. */
-const engine = demoEngine;
+/** The engine is injected here; swapping the model only changes this line. */
+const engine = productionEngine;
 
 export type RunParams = {
   type: SimulationKind;

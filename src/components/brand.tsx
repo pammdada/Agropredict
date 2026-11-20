@@ -25,7 +25,7 @@ export function DemoBadge({ className }: { className?: string }) {
         "inline-flex items-center gap-1 rounded-full border border-warning/40 bg-warning/10 px-2 py-0.5 text-xs font-semibold text-[oklch(0.45_0.1_65)]",
         className,
       )}
-      title="Resultados generados por el motor demo v0: deterministas y parametrizados, no por un modelo entrenado."
+      title="Rendimiento: modelo APF3 (Ridge) entrenado con datos sintéticos. Cadena de frío: motor demo v0. No son datos reales."
     >
       <FlaskConical className="size-3" aria-hidden />
       Datos demo

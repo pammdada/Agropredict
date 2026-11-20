@@ -139,7 +139,7 @@ export default async function SimulationResultPage({ params }: { params: Promise
               </div>
               <div className="flex justify-between">
                 <dt>Calidad de datos</dt>
-                <dd>Demo (sintéticos)</dd>
+                <dd>{r.dataQuality === "apf3_synthetic" ? "Modelo APF3 (sintéticos)" : "Demo (sintéticos)"}</dd>
               </div>
               <div className="flex justify-between">
                 <dt>Generado</dt>

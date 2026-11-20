@@ -2,7 +2,7 @@
 
 Portal SaaS B2B multiempresa para simular escenarios de clima (rendimiento) y cadena de frío, leer el resultado como rango con nivel de confianza, recibir una acción recomendada y registrarla como decisión.
 
-> Todos los resultados del motor v0 son **datos demo**: deterministas y parametrizados, no provienen de un modelo entrenado.
+> El rendimiento de uva de mesa en Ica usa el modelo **APF3** (Ridge entrenado con datos sintéticos). La cadena de frío y los cultivos fuera de dominio siguen usando el motor demo v0. Todos los datos son sintéticos: no representan precisión real. Ver [`MODELO.md`](./MODELO.md).
 
 ## Arranque rápido
 
@@ -68,19 +68,19 @@ src/
   db/                  Esquema Drizzle, cliente PGlite/Postgres y seed
   lib/auth/            argon2id, sesiones en cookie httpOnly, matriz RBAC, contexto de organización
   lib/billing/         Entitlements, máquina de estados, PaymentProvider (Simulated + esqueleto Culqi)
-  lib/simulation/      Contrato SimulationEngine, motor demo v0 y servicio (alertas y eventos)
+  lib/simulation/      Contrato SimulationEngine, motor APF3 (uva/Ica), motor demo v0 y servicio (alertas y eventos)
 ```
 
 - **Multi-tenancy**: `org_id` en toda tabla de negocio; cada consulta y acción filtra por la organización de la sesión. RLS en Postgres queda para una etapa posterior.
 - **Autorización**: permisos `recurso:acción` verificados en el servidor (`authorize()` en cada Server Action); la interfaz solo oculta lo que el rol no puede hacer. Una organización suspendida o con la suscripción vencida queda en solo lectura.
 - **Entitlements**: los límites del plan (fundos, hectáreas, usuarios, simulaciones por mes, cadena de frío, comparador) se aplican con independencia del rol.
 - **Impersonación**: el Superadmin entra a una organización en solo lectura, con motivo obligatorio, auditoría y banner permanente.
-- **Motor de simulación**: `SimulationEngine.run(input)` devuelve tres escenarios, confianza, factores, acciones, serie temporal y versión del modelo. Reemplazar el motor demo por el modelo de APF3 solo cambia `src/lib/simulation/service.ts`.
+- **Motor de simulación**: `SimulationEngine.run(input)` devuelve tres escenarios, confianza, factores, acciones, serie temporal y versión del modelo. `productionEngine` enruta uva/Ica a APF3 y el resto a demo v0; el servicio solo inyecta `src/lib/simulation/engine.ts`. Los parámetros del modelo viven en `src/lib/simulation/apf3/model.json`.
 - **Pagos**: `PaymentProvider` con `SimulatedProvider`; IGV 18 % en cada factura.
 
 ## Fuera del alcance de este MVP
 
-Docker, CI, Keycloak, RLS en Postgres, pruebas E2E, despliegue, correo transaccional, comprobantes SUNAT, ETL y modelos de ML reales.
+Docker, CI, Keycloak, RLS en Postgres, pruebas E2E, despliegue, correo transaccional, comprobantes SUNAT, ETL y modelos entrenados con datos reales. El modelo APF3 actual usa datos sintéticos.
 
 ## Guion corto de demo (≈ 5 min)
 
