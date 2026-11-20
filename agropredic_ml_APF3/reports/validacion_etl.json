@@ -1,0 +1,32 @@
+{
+  "tmax_c": {
+    "imputados": 11,
+    "MAE_imputacion": 0.45,
+    "max_error_imputacion": 0.8,
+    "celdas_no_imputadas_identicas_a_verdad_pct": 100.0
+  },
+  "tmin_c": {
+    "imputados": 5,
+    "MAE_imputacion": 0.26,
+    "max_error_imputacion": 0.59,
+    "celdas_no_imputadas_identicas_a_verdad_pct": 100.0
+  },
+  "precip_mm": {
+    "imputados": 4,
+    "MAE_imputacion": 0.0,
+    "max_error_imputacion": 0.0,
+    "celdas_no_imputadas_identicas_a_verdad_pct": 100.0
+  },
+  "hr_pct": {
+    "imputados": 0,
+    "MAE_imputacion": null,
+    "max_error_imputacion": null,
+    "celdas_no_imputadas_identicas_a_verdad_pct": 100.0
+  },
+  "rendimiento": {
+    "filas_comparadas": 172,
+    "recuperadas_exactas_pct": 100.0,
+    "variedad_recuperada_pct": 100.0
+  },
+  "filas_clima_final_igual_verdad": true
+}

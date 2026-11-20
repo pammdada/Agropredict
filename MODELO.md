@@ -12,37 +12,42 @@ El modelo se usa en el prototipo para simulaciones de tipo `YIELD` cuando el cul
 
 | Elemento | Valor |
 | --- | --- |
-| Registros | 139 |
-| Fundos | 6 |
-| Campañas | 2001–2026 |
-| Variables del dataset | 14 |
+| Registros | 162 |
+| Fundos | 10 |
+| Campañas | 2001–2025 |
 | Faltantes | 0 |
 | Duplicados | 0 |
-| Rendimiento medio | 15.43 t/ha |
-| Desviación estándar | 1.68 t/ha |
+| Rendimiento medio | 19.68 t/ha |
+| Desviación estándar | 2.31 t/ha |
 
-Los datos provienen de `agropredic_apf3_completo/agropredic_apf3.py`, que genera:
+Los datos provienen de `agropredic_ml_APF3/`:
 
-- `data/clima_mensual_ica_sintetico.csv`: anomalía térmica y precipitación mensual.
-- `data/rendimiento_fundos_sintetico.csv`: rendimiento por fundo y campaña.
-- `data/dataset_modelo.csv`: features listas para entrenamiento.
+- `ml/01_generar_dataset.py`: genera los CSV crudos con fallas inyectadas (semilla 42).
+- `ml/02_etl_limpieza_features.py`: limpieza, imputación con bandera y construcción de variables sin fuga.
+- `data/processed/clima_ica_mensual.csv`: clima mensual procesado.
+- `data/processed/rendimiento_fundos.csv`: rendimiento por fundo y campaña.
+- `data/processed/dataset_modelado.csv`: dataset final de modelado.
 
-La campaña `c` se define de agosto de `c-1` a julio de `c`. El pronóstico usa solo clima disponible hasta julio de `c-1`, evitando fuga de datos. El historial del fundo usa campañas anteriores, nunca la campaña que se predice.
+La campaña `c` se define de agosto de `c-1` a julio de `c`. El pronóstico se hace al **30 de junio** del año de inicio. Las variables del Conjunto A usan solo información disponible hasta esa fecha; las del Conjunto B son futuro y entran como escenario climático.
 
 ## 3. Variables del modelo
 
-El modelo usa 8 predictores:
+El modelo usa 12 predictores (Conjunto A + Conjunto B):
 
-| Variable | Significado |
-| --- | --- |
-| `temp_ene_abr` | Anomalía térmica media de enero a abril del año anterior. |
-| `temp_may_jul` | Anomalía térmica media de mayo a julio del año anterior. |
-| `temp_ago_dic_prev` | Anomalía térmica media de agosto a diciembre de dos años atrás. |
-| `precip_ene_abr` | Precipitación media de enero a abril del año anterior. |
-| `precip_may_jul` | Precipitación media de mayo a julio del año anterior. |
-| `temp_x_precip` | Interacción entre `temp_ene_abr` y `precip_ene_abr`. |
-| `rend_media_previa` | Media histórica de rendimiento del fundo antes de la campaña. |
-| `hectareas` | Superficie del fundo. |
+| Variable | Conjunto | Significado |
+| --- | --- | --- |
+| `oni_djf_previo` | A | ONI DJF del año de inicio, observado al 30-jun. |
+| `anom_tmax_ene_mar` | A | Anomalía de temperatura máxima de enero a marzo del año de inicio. |
+| `anom_tmean_abr_jun` | A | Anomalía de temperatura media de abril a junio del año de inicio. |
+| `precip_ene_mar_prev` | A | Precipitación acumulada de enero a marzo del año de inicio. |
+| `rend_prev` | Historial | Rendimiento del fundo en la campaña anterior. |
+| `rend_media_hist` | Historial | Media histórica del fundo antes de la campaña. |
+| `n_campanas_previas` | Historial | Número de campañas registradas antes de la campaña. |
+| `hectareas` | Escala | Superficie del fundo. |
+| `oni_djf_cosecha` | B | ONI DJF de la campaña de cosecha (escenario). |
+| `anom_tmean_set_nov` | B | Anomalía de temperatura media de septiembre a noviembre (escenario). |
+| `hr_set_nov` | B | Humedad relativa media de septiembre a noviembre (escenario). |
+| `precip_ene_mar_cosecha` | B | Precipitación acumulada de enero a marzo de la cosecha (escenario). |
 
 La variable objetivo es `rend_t_ha` (`rendimiento exportable en t/ha`).
 
@@ -55,20 +60,34 @@ El prototipo no captura clima mensual, así que APF3 traduce el escenario climá
 - `nino_strong` → `2.6`
 - `custom` → valor del usuario, limitado a `[-3, 3]`
 
-La traducción usada es:
+Las variables climáticas se construyen con la relación lineal estimada del dataset:
 
-| Feature | Fórmula |
+```text
+feature = intercepto + pendiente * A
+ONI previo = ONI cosecha = A
+```
+
+| Feature | Intercepto | Pendiente |
+| --- | ---: | ---: |
+| `anom_tmax_ene_mar` | 0.180850 | 0.860181 |
+| `anom_tmean_abr_jun` | 0.173057 | 0.543151 |
+| `precip_ene_mar_prev` | 3.445229 | -0.164859 |
+| `anom_tmean_set_nov` | 0.139298 | 0.422855 |
+| `hr_set_nov` | 69.795561 | 1.201045 |
+| `precip_ene_mar_cosecha` | 3.297346 | -0.180002 |
+
+Las precipitaciones se limitan a `>= 0`. Los coeficientes se calculan desde `dataset_modelado.csv` y se guardan en `model.json` (`scenario.climates`); no están hardcodeados en TypeScript.
+
+Las variables no climáticas se aproximan desde el prototipo:
+
+| Feature | Valor en el prototipo |
 | --- | --- |
-| `temp_ene_abr` | `0.7 * A` |
-| `temp_may_jul` | `0.2 * A` |
-| `temp_ago_dic_prev` | `0.1 * A` |
-| `precip_ene_abr` | `max(0, 2.229478 + 1.5 * A)` |
-| `precip_may_jul` | `max(0, 0.857122 + 0.15 * A)` |
-| `temp_x_precip` | `temp_ene_abr * precip_ene_abr` |
-| `rend_media_previa` | `crop.baseYieldTHa` |
+| `rend_prev` | `crop.baseYieldTHa` |
+| `rend_media_hist` | `crop.baseYieldTHa` |
+| `n_campanas_previas` | `farm.historyYears` |
 | `hectareas` | `farm.hectares` |
 
-`rend_media_previa` se aproxima con el rendimiento base del cultivo porque el prototipo todavía no guarda el historial real de rendimiento por fundo. Cuando exista ese dato, debe reemplazar a `crop.baseYieldTHa`.
+`rend_prev` y `rend_media_hist` usan el rendimiento base del cultivo porque el prototipo todavía no guarda el historial real por fundo. Cuando exista ese dato, debe reemplazar a `crop.baseYieldTHa`.
 
 ## 5. Ecuación del modelo
 
@@ -83,18 +102,22 @@ Parámetros principales:
 
 | Variable | Media | Escala | Coeficiente |
 | --- | ---: | ---: | ---: |
-| `temp_ene_abr` | 0.3226 | 0.5512 | -0.3144 |
-| `temp_may_jul` | 0.1647 | 0.2543 | -0.1650 |
-| `temp_ago_dic_prev` | 0.1540 | 0.2477 | -0.0443 |
-| `precip_ene_abr` | 2.2295 | 2.1465 | -0.4345 |
-| `precip_may_jul` | 0.8571 | 0.4172 | -0.0302 |
-| `temp_x_precip` | 1.8580 | 3.5364 | -0.4592 |
-| `rend_media_previa` | 15.4727 | 0.9598 | 0.5339 |
-| `hectareas` | 69.1007 | 28.5832 | 0.2799 |
+| `oni_djf_previo` | -0.0926 | 1.0441 | -0.4848 |
+| `anom_tmax_ene_mar` | 0.1012 | 1.0780 | -0.0467 |
+| `anom_tmean_abr_jun` | 0.1228 | 0.6754 | -0.2943 |
+| `precip_ene_mar_prev` | 3.4605 | 11.1694 | -0.0863 |
+| `rend_prev` | 19.5783 | 2.3292 | 0.3536 |
+| `rend_media_hist` | 19.1190 | 1.3086 | 0.6229 |
+| `n_campanas_previas` | 9.9506 | 6.3865 | 0.4207 |
+| `hectareas` | 123.6420 | 76.7025 | -0.0795 |
+| `oni_djf_cosecha` | -0.0525 | 1.0478 | -0.4233 |
+| `anom_tmean_set_nov` | 0.1171 | 0.6337 | -0.2667 |
+| `hr_set_nov` | 69.7325 | 2.7901 | 0.2370 |
+| `precip_ene_mar_cosecha` | 3.3068 | 10.4792 | -0.5186 |
 
-Intercepto: `15.425611510791368`.
+Intercepto: `19.680246913580245`.
 
-El `model.json` exportado se reentrena con los 139 registros, igual que el `.joblib` original. Las métricas de la sección 7 provienen del split de validación/prueba, por lo que no son métricas in-sample del artefacto final.
+El `model.json` exportado se reentrena con los 162 registros. Las métricas de la sección 7 provienen de validación y prueba, por lo que no son métricas in-sample del artefacto final.
 
 Los parámetros completos están en `src/lib/simulation/apf3/model.json` y se regeneran con `scripts/export_apf3_model.py`.
 
@@ -103,49 +126,44 @@ Los parámetros completos están en `src/lib/simulation/apf3/model.json` y se re
 A partir de la predicción central `ŷ`:
 
 - **Central:** `ŷ`
-- **Optimista:** `ŷ + 1.37`
-- **Pesimista:** `ŷ - 0.631`
+- **Optimista:** `ŷ + 2.0718`
+- **Pesimista:** `ŷ - 1.9744`
 
-Los valores `1.37` y `-0.631` son los percentiles 90 y 10 de los residuos de validación del modelo. La cobertura observada del rango en prueba fue **86.7 %**.
+Los valores `2.0718` y `-1.9744` son los percentiles 90 y 10 de los residuos out-of-fold de la validación leave-one-farm-out. La cobertura observada del rango fue **79.0 %**.
 
-La base contra la que se calcula el cambio porcentual es `crop.baseYieldTHa`. Por eso el escenario neutro puede mostrar una pequeña variación respecto de la base: el modelo fue entrenado con un rendimiento medio distinto al rendimiento base del catálogo del prototipo.
+La base contra la que se calcula el cambio porcentual es `crop.baseYieldTHa` (19.5 t/ha en el catálogo). El rendimiento medio del dataset es 19.68 t/ha, por lo que el escenario neutro puede mostrar una variación pequeña respecto de la base.
 
 ## 7. Métricas
 
-| Modelo | MAE validación | MAPE validación | R² validación | MAE prueba | MAPE prueba | R² prueba |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Baseline (media histórica) | 1.477 | 11.052 | 0.028 | 1.359 | 9.558 | 0.226 |
-| Regresión lineal | 0.847 | 5.812 | 0.728 | 0.646 | 4.139 | 0.807 |
-| **Ridge** | **0.788** | **5.341** | **0.746** | **0.628** | **4.012** | **0.823** |
-| Random Forest | 0.929 | 6.890 | 0.600 | 0.538 | 3.616 | 0.882 |
+| Evaluación | MAE | RMSE | MAPE | R² |
+| --- | ---: | ---: | ---: | ---: |
+| Validación leave-one-farm-out | 1.289 | 1.585 | 6.69 % | 0.527 |
+| Prueba temporal (campañas ≥ 2021) | 1.502 | 1.765 | 7.78 % | 0.431 |
 
-Ridge fue seleccionado por tener el menor MAE de validación. La selección no usa el conjunto de prueba. Aunque Random Forest tiene mejor MAE en prueba, se prefirió el modelo más simple y con mejor validación para reducir el riesgo de sobreajuste.
+La validación deja fuera un fundo completo por vez, para medir generalización a fundos no vistos. La prueba entrena con campañas anteriores a 2021 y evalúa con 2021–2025.
 
-Criterio APF2: `MAPE <= 15 %` y `cobertura >= 80 %`. APF3 cumple ambos en prueba (`MAPE = 4.012 %`, `cobertura = 86.7 %`).
+Criterio APF2: `MAPE <= 15 %` y `cobertura >= 80 %`. APF3 cumple el MAPE en prueba (`7.78 %`); la cobertura es **79.0 %**, ligeramente por debajo del umbral de 80 %.
 
-Otros resultados:
+## 8. Peso de las variables
 
-- MAPE en campañas posteriores a Niño: `3.1 %`.
-- MAPE en el resto de campañas: `4.7 %`.
-- MAE de Random Forest con 10 semillas: `0.551 ± 0.008`.
-- MAE con ruido de `0.3 °C` en temperatura: `0.618`.
+Coeficientes estandarizados (mayor magnitud, mayor peso sobre la predicción):
 
-## 8. Importancia de variables
-
-Importancia por permutación (aumento del MAE al permutar):
-
-| Variable | Importancia |
+| Variable | Coeficiente estandarizado |
 | --- | ---: |
-| `temp_x_precip` | 0.4570 |
-| `rend_media_previa` | 0.2811 |
-| `precip_ene_abr` | 0.1635 |
-| `hectareas` | 0.1340 |
-| `temp_ene_abr` | 0.0099 |
-| `temp_ago_dic_prev` | -0.0008 |
-| `precip_may_jul` | -0.0096 |
-| `temp_may_jul` | -0.0112 |
+| `rend_media_hist` | 0.6229 |
+| `precip_ene_mar_cosecha` | -0.5186 |
+| `oni_djf_previo` | -0.4848 |
+| `oni_djf_cosecha` | -0.4233 |
+| `n_campanas_previas` | 0.4207 |
+| `rend_prev` | 0.3536 |
+| `anom_tmean_abr_jun` | -0.2943 |
+| `anom_tmean_set_nov` | -0.2667 |
+| `hr_set_nov` | 0.2370 |
+| `precip_ene_mar_prev` | -0.0863 |
+| `hectareas` | -0.0795 |
+| `anom_tmax_ene_mar` | -0.0467 |
 
-La interacción calor-lluvia y el historial del fundo son los factores con mayor peso.
+El historial del fundo, el ONI y las lluvias de cosecha son los factores con mayor peso.
 
 ## 9. Integración en el prototipo
 
@@ -157,17 +175,17 @@ El flujo es:
    - `YIELD` + `uva` + `ica` → `src/lib/simulation/apf3/engine.ts`.
    - `COLD_CHAIN` u otro cultivo/zona → `src/lib/simulation/engine-v0.ts`.
 4. El motor APF3 construye las features, aplica la ecuación Ridge y genera escenarios, factores, acciones y serie mensual.
-5. El resultado se guarda con `modelVersion = "agropredic-apf3-ridge-v1.0"` y `dataQuality = "apf3_synthetic"`.
+5. El resultado se guarda con `modelVersion = "agropredic-apf3-ridge-v2.0"` y `dataQuality = "apf3_synthetic"`.
 
-No se ejecuta Python en producción. El archivo `.joblib` es el artefacto original de entrenamiento; el prototipo usa su equivalente portado a TypeScript en `model.json`.
+No se ejecuta Python en producción. El prototipo usa el equivalente portado a TypeScript en `model.json`.
 
 ### Factores
 
 Los factores descomponen la predicción respecto de la media del dataset de entrenamiento:
 
 - Historial productivo del fundo.
-- Estrés térmico en floración y brotación.
-- Lluvias e interacción calor-lluvia.
+- Estrés térmico y señal ENSO.
+- Lluvias y humedad en floración.
 - Escala del fundo.
 
 ### Acciones
@@ -181,32 +199,34 @@ Las acciones recomendadas se activan según la caída del escenario central fren
 ## 10. Limitaciones
 
 - Los datos son sintéticos; el modelo no está validado con SENAMHI, MIDAGRI ni datos reales de un fundo.
-- `rend_media_previa` usa el rendimiento base del cultivo como aproximación.
-- La traducción de escenario climático a clima mensual es una simplificación.
+- `rend_prev` y `rend_media_hist` usan el rendimiento base del cultivo como aproximación.
+- La traducción de escenario climático a clima mensual es una simplificación lineal estimada del dataset.
 - El modelo fue entrenado para uva de mesa en Ica. No debe usarse en mango, palta, Piura u Olmos.
-- El horizonte del modelo es fijo (corte en julio del año anterior). El horizonte de la UI solo afecta la presentación de la serie mensual.
+- El horizonte del modelo es fijo (corte al 30-jun del año de inicio). El horizonte de la UI solo afecta la presentación de la serie mensual.
 - La cadena de frío sigue siendo un motor demo parametrizado.
 - Las decisiones recomendadas son apoyo operativo, no una garantía de resultado.
 
 ## 11. Cómo reentrenar y actualizar
 
-Requisitos Python: `numpy`, `pandas`, `scikit-learn`, `joblib` y `matplotlib`.
+Requisitos Python: `numpy`, `pandas`, `scipy`, `matplotlib` y `scikit-learn`.
 
 ```bash
-python agropredic_apf3_completo/agropredic_apf3.py
+cd agropredic_ml_APF3
+./ejecutar_pipeline.sh
+cd ..
 python scripts/export_apf3_model.py
 npm run typecheck
 npm run lint
 npm run build
 ```
 
-El primer comando regenera datos, métricas y el `.joblib`. El segundo lee `dataset_modelo.csv`, vuelve a ajustar `StandardScaler + Ridge(alpha=3.0)` y escribe `src/lib/simulation/apf3/model.json`.
+`ejecutar_pipeline.sh` regenera datos, ETL, reportes y pruebas con semilla 42. `scripts/export_apf3_model.py` lee `agropredic_ml_APF3/data/processed/dataset_modelado.csv`, ajusta `StandardScaler + Ridge(alpha=10.0)`, calcula métricas leave-one-farm-out y split temporal, estima el mapeo de escenario y escribe `src/lib/simulation/apf3/model.json`.
 
 Si se reemplazan los datos sintéticos por datos reales:
 
-1. Reemplazar `generar_datos()` por la lectura de los CSV reales.
-2. Mantener el mismo esquema de features o actualizar `features.ts`.
-3. Reentrenar y revisar `outputs/tabla_metricas.csv` y `outputs/resumen.json`.
+1. Reemplazar la generación de `ml/01_generar_dataset.py` por la lectura de los CSV reales.
+2. Mantener el esquema de features o actualizar `model.ts` y `features.ts`.
+3. Revisar `reports/calidad_datos.json` y `reports/validacion_etl.json`.
 4. Regenerar `model.json` con `scripts/export_apf3_model.py`.
 5. Actualizar la versión en `model.json` y en `MODELO.md`.
 
@@ -214,13 +234,12 @@ Si se reemplazan los datos sintéticos por datos reales:
 
 | Archivo | Rol |
 | --- | --- |
-| `agropredic_apf3_completo/agropredic_apf3.py` | Generación de datos, entrenamiento, métricas y exportación del `.joblib`. |
-| `agropredic_apf3_completo/data/dataset_modelo.csv` | Dataset de modelado. |
-| `agropredic_apf3_completo/models/modelo_agropredic.joblib` | Modelo original serializado. |
-| `agropredic_apf3_completo/outputs/tabla_metricas.csv` | Comparación de modelos. |
-| `agropredic_apf3_completo/outputs/resumen.json` | Resumen de métricas y cuantiles. |
-| `agropredic_apf3_completo/outputs/predicciones_test.csv` | Predicciones de prueba y errores. |
-| `scripts/export_apf3_model.py` | Exporta los parámetros a JSON. |
+| `agropredic_ml_APF3/ml/01_generar_dataset.py` | Generación de datos sintéticos crudos con fallas inyectadas. |
+| `agropredic_ml_APF3/ml/02_etl_limpieza_features.py` | Limpieza, imputación y construcción del dataset de modelado. |
+| `agropredic_ml_APF3/ml/features.py` | Definición de Conjunto A / Conjunto B y reglas anti-fuga. |
+| `agropredic_ml_APF3/data/processed/dataset_modelado.csv` | Dataset de modelado. |
+| `agropredic_ml_APF3/tests/test_pipeline.py` | Pruebas del pipeline, incluida la anti-fuga. |
+| `scripts/export_apf3_model.py` | Entrena, evalúa y exporta los parámetros a JSON. |
 | `src/lib/simulation/apf3/model.json` | Parámetros del modelo usados por el prototipo. |
 | `src/lib/simulation/apf3/model.ts` | Tipos y predicción Ridge. |
 | `src/lib/simulation/apf3/features.ts` | Traducción de `SimulationInput` a features. |

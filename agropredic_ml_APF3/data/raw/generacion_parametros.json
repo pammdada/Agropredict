@@ -1,0 +1,51 @@
+{
+  "semilla": 42,
+  "periodo_clima": [
+    "2000-01",
+    "2026-06"
+  ],
+  "fundos": 10,
+  "inicio_por_fundo": [
+    2000,
+    2000,
+    2003,
+    2005,
+    2007,
+    2009,
+    2011,
+    2014,
+    2017,
+    2020
+  ],
+  "coeficientes_generador": {
+    "prev_verano": -0.045,
+    "floracion": -0.085,
+    "lluvia_cosecha": -0.004,
+    "hr_floracion": -0.004,
+    "enfriamiento": 0.01,
+    "tendencia_anual": 0.006,
+    "ruido_fundo_sd": 0.045,
+    "ruido_idio_sd": 0.035,
+    "ar_fundo": 0.35
+  },
+  "multiplicador_variedad": {
+    "Red Globe": 1.0,
+    "Sweet Globe": 1.06,
+    "Autumn Crisp": 1.02,
+    "Crimson Seedless": 0.97,
+    "Thompson Seedless": 0.94
+  },
+  "fallas_inyectadas": {
+    "clima_tmax_nulos": 8,
+    "clima_tmin_nulos": 5,
+    "clima_centinela_-999": 4,
+    "clima_outliers_tmax": 3,
+    "clima_filas_duplicadas": 5,
+    "rend_nulos": 2,
+    "rend_unidad_kg_ha": 3,
+    "rend_filas_duplicadas": 3,
+    "rend_fecha_formato_mixto": 6,
+    "rend_variedad_mayus_espacios": 4
+  },
+  "nota": "Dataset sintético. Fallas inyectadas a propósito para probar el ETL."
+}

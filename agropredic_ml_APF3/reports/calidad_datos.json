@@ -1,0 +1,43 @@
+{
+  "clima_filas_raw": 323,
+  "clima_nulos_raw": {
+    "tmax_c": 8,
+    "tmin_c": 5,
+    "precip_mm": 0,
+    "hr_pct": 0
+  },
+  "clima_centinelas_raw": 4,
+  "clima_duplicados_raw": 5,
+  "clima_fuera_de_rango": {
+    "tmax_c": 3,
+    "tmin_c": 0,
+    "hr_pct": 0,
+    "precip_mm": 0
+  },
+  "clima_tmin_ge_tmax": 0,
+  "clima_meses_faltantes_calendario": 0,
+  "clima_imputados": {
+    "tmax_c": 11,
+    "tmin_c": 5,
+    "hr_pct": 0,
+    "precip_mm": 4
+  },
+  "clima_nulos_final": 0,
+  "clima_filas_final": 318,
+  "rend_filas_raw": 177,
+  "rend_nulos_objetivo_raw": 2,
+  "rend_duplicados_raw": 3,
+  "rend_unidad_corregida_kg_a_t": 3,
+  "rend_fechas_formato_no_iso": 6,
+  "rend_variedades_distintas_antes_despues": [
+    7,
+    4
+  ],
+  "rend_fuera_de_rango_5_40": 0,
+  "rend_filas_final": 174,
+  "modelado_filas_antes_de_excluir_primera_campana": 172,
+  "modelado_filas_final": 162,
+  "modelado_nulos_final": 0,
+  "modelado_fundos": 10,
+  "modelado_campanas": 25
+}

@@ -1,0 +1,363 @@
+{
+  "precip_pct_meses_cero": 93.4,
+  "precip_max_mm": 38.0,
+  "precip_meses_mayor_5mm": 3,
+  "objetivo": {
+    "n": 162,
+    "media": 19.68,
+    "sd": 2.31,
+    "min": 11.94,
+    "p25": 18.36,
+    "mediana": 19.76,
+    "p75": 21.28,
+    "max": 25.21,
+    "asimetria": -0.3,
+    "curtosis_exceso": 0.34,
+    "cv_pct": 11.7
+  },
+  "shapiro_rend_idx": {
+    "W": 0.967,
+    "p": 0.0007
+  },
+  "kruskal_variedad": {
+    "H": 23.28,
+    "p": 3.53e-05
+  },
+  "pct_varianza_entre_fundos": 23.2,
+  "kruskal_enso": {
+    "H": 9.61,
+    "p": 0.00817
+  },
+  "mw_fuerte_vs_neutro": {
+    "U": 732.0,
+    "p_unilateral": 0.0016,
+    "mediana_fuerte": 96.2,
+    "mediana_neutro": 101.7,
+    "diferencia_puntos": -5.5,
+    "cliff_delta": -0.39
+  },
+  "clase_enso_tabla": [
+    {
+      "clase": "Neutro/Niña",
+      "registros": 105,
+      "campanas": 16,
+      "media_idx": 100.7,
+      "mediana_idx": 101.7,
+      "sd_idx": 10.6,
+      "media_t_ha": 19.87
+    },
+    {
+      "clase": "Niño débil",
+      "registros": 34,
+      "campanas": 6,
+      "media_idx": 100.6,
+      "mediana_idx": 99.6,
+      "sd_idx": 7.1,
+      "media_t_ha": 19.59
+    },
+    {
+      "clase": "Niño moderado/fuerte",
+      "registros": 23,
+      "campanas": 3,
+      "media_idx": 95.7,
+      "mediana_idx": 96.2,
+      "sd_idx": 6.6,
+      "media_t_ha": 18.96
+    }
+  ],
+  "campanas_nino_fuerte": [
+    "2009-2010",
+    "2015-2016",
+    "2023-2024"
+  ],
+  "idx_medio_2016-2017": 75.5,
+  "idx_medio_2017-2018": 99.4,
+  "spearman_con_objetivo": {
+    "oni_djf_previo": {
+      "rho": -0.424,
+      "p": 1.83e-08
+    },
+    "anom_tmax_ene_mar": {
+      "rho": -0.399,
+      "p": 1.41e-07
+    },
+    "anom_tmean_abr_jun": {
+      "rho": -0.418,
+      "p": 3.09e-08
+    },
+    "precip_ene_mar_prev": {
+      "rho": -0.297,
+      "p": 0.000126
+    },
+    "rend_prev": {
+      "rho": 0.5,
+      "p": 1.25e-11
+    },
+    "rend_media_hist": {
+      "rho": 0.455,
+      "p": 1.17e-09
+    },
+    "oni_djf_cosecha": {
+      "rho": -0.237,
+      "p": 0.00235
+    },
+    "anom_tmean_set_nov": {
+      "rho": -0.343,
+      "p": 7.77e-06
+    },
+    "hr_set_nov": {
+      "rho": -0.231,
+      "p": 0.00306
+    },
+    "precip_ene_mar_cosecha": {
+      "rho": -0.289,
+      "p": 0.000194
+    },
+    "hectareas": {
+      "rho": -0.222,
+      "p": 0.00444
+    },
+    "anio_inicio": {
+      "rho": 0.195,
+      "p": 0.0131
+    }
+  },
+  "vif": {
+    "oni_djf_previo": 15.71,
+    "anom_tmax_ene_mar": 8.69,
+    "anom_tmean_abr_jun": 9.26,
+    "precip_ene_mar_prev": 3.32,
+    "rend_prev": 2.79,
+    "rend_media_hist": 2.71,
+    "oni_djf_cosecha": 5.07,
+    "anom_tmean_set_nov": 7.14,
+    "hr_set_nov": 2.63,
+    "precip_ene_mar_cosecha": 1.58,
+    "hectareas": 1.5,
+    "anio_inicio": 2.08
+  },
+  "rezago": {
+    "n_campanas": 25,
+    "rho_critico_5pct": 0.396,
+    "tabla": [
+      {
+        "rezago": 0,
+        "rho": -0.365,
+        "p": 0.073
+      },
+      {
+        "rezago": 1,
+        "rho": -0.319,
+        "p": 0.121
+      },
+      {
+        "rezago": 2,
+        "rho": -0.55,
+        "p": 0.004
+      },
+      {
+        "rezago": 3,
+        "rho": -0.51,
+        "p": 0.009
+      },
+      {
+        "rezago": 4,
+        "rho": -0.483,
+        "p": 0.015
+      },
+      {
+        "rezago": 5,
+        "rho": -0.55,
+        "p": 0.004
+      },
+      {
+        "rezago": 6,
+        "rho": -0.341,
+        "p": 0.095
+      },
+      {
+        "rezago": 7,
+        "rho": -0.55,
+        "p": 0.004
+      },
+      {
+        "rezago": 8,
+        "rho": -0.552,
+        "p": 0.004
+      },
+      {
+        "rezago": 9,
+        "rho": -0.601,
+        "p": 0.001
+      },
+      {
+        "rezago": 10,
+        "rho": -0.514,
+        "p": 0.009
+      },
+      {
+        "rezago": 11,
+        "rho": -0.546,
+        "p": 0.005
+      },
+      {
+        "rezago": 12,
+        "rho": -0.495,
+        "p": 0.012
+      }
+    ],
+    "mejor_rezago": 9,
+    "mejor_rho": -0.601
+  },
+  "spearman_idx_anom_tmean_set_nov": {
+    "rho": -0.47,
+    "p": 2.76e-10
+  },
+  "spearman_idx_anom_tmax_ene_mar": {
+    "rho": -0.484,
+    "p": 7.15e-11
+  },
+  "pendiente_pos": -14.09,
+  "pendiente_neg": 1.72,
+  "descriptivos": [
+    {
+      "variable": "oni_djf_previo",
+      "count": 162.0,
+      "mean": -0.09,
+      "std": 1.05,
+      "min": -1.6,
+      "50%": -0.4,
+      "max": 2.5
+    },
+    {
+      "variable": "anom_tmax_ene_mar",
+      "count": 162.0,
+      "mean": 0.1,
+      "std": 1.08,
+      "min": -1.98,
+      "50%": -0.12,
+      "max": 2.28
+    },
+    {
+      "variable": "anom_tmean_abr_jun",
+      "count": 162.0,
+      "mean": 0.12,
+      "std": 0.68,
+      "min": -1.18,
+      "50%": -0.06,
+      "max": 1.51
+    },
+    {
+      "variable": "precip_ene_mar_prev",
+      "count": 162.0,
+      "mean": 3.46,
+      "std": 11.2,
+      "min": 0.0,
+      "50%": 0.0,
+      "max": 52.0
+    },
+    {
+      "variable": "rend_prev",
+      "count": 162.0,
+      "mean": 19.58,
+      "std": 2.34,
+      "min": 11.94,
+      "50%": 19.58,
+      "max": 25.21
+    },
+    {
+      "variable": "rend_media_hist",
+      "count": 162.0,
+      "mean": 19.12,
+      "std": 1.31,
+      "min": 15.5,
+      "50%": 19.12,
+      "max": 22.9
+    },
+    {
+      "variable": "oni_djf_cosecha",
+      "count": 162.0,
+      "mean": -0.05,
+      "std": 1.05,
+      "min": -1.6,
+      "50%": -0.4,
+      "max": 2.5
+    },
+    {
+      "variable": "anom_tmean_set_nov",
+      "count": 162.0,
+      "mean": 0.12,
+      "std": 0.64,
+      "min": -1.01,
+      "50%": 0.23,
+      "max": 1.4
+    },
+    {
+      "variable": "hr_set_nov",
+      "count": 162.0,
+      "mean": 69.73,
+      "std": 2.8,
+      "min": 62.33,
+      "50%": 70.0,
+      "max": 74.67
+    },
+    {
+      "variable": "precip_ene_mar_cosecha",
+      "count": 162.0,
+      "mean": 3.31,
+      "std": 10.51,
+      "min": 0.0,
+      "50%": 0.0,
+      "max": 52.0
+    },
+    {
+      "variable": "hectareas",
+      "count": 162.0,
+      "mean": 123.64,
+      "std": 76.94,
+      "min": 43.0,
+      "50%": 110.0,
+      "max": 244.0
+    },
+    {
+      "variable": "anio_inicio",
+      "count": 162.0,
+      "mean": 2015.94,
+      "std": 6.4,
+      "min": 2001.0,
+      "50%": 2017.0,
+      "max": 2025.0
+    },
+    {
+      "variable": "rend_t_ha",
+      "count": 162.0,
+      "mean": 19.68,
+      "std": 2.31,
+      "min": 11.94,
+      "50%": 19.76,
+      "max": 25.21
+    },
+    {
+      "variable": "rend_idx",
+      "count": 162.0,
+      "mean": 100.0,
+      "std": 9.59,
+      "min": 61.63,
+      "50%": 100.49,
+      "max": 120.68
+    }
+  ],
+  "panel": {
+    "registros": 162,
+    "fundos": 10,
+    "campanas": 25,
+    "campanas_por_fundo_min": 5,
+    "campanas_por_fundo_max": 25,
+    "variedades": {
+      "Red Globe": 92,
+      "Thompson Seedless": 42,
+      "Sweet Globe": 20,
+      "Crimson Seedless": 8
+    }
+  }
+}

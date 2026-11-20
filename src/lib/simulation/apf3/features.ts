@@ -1,8 +1,5 @@
 import type { SimulationInput } from "../contract";
-import type { Apf3Features } from "./model";
-
-const NEUTRAL_PRECIP_ENE_ABR = 2.229478417266186;
-const NEUTRAL_PRECIP_MAY_JUL = 0.857122302158272;
+import { APF3_MODEL, type Apf3Feature, type Apf3Features } from "./model";
 
 export function anomalyOf(input: SimulationInput): number {
   switch (input.climate) {
@@ -17,22 +14,32 @@ export function anomalyOf(input: SimulationInput): number {
   }
 }
 
+function climateValue(feature: Apf3Feature, anomaly: number): number {
+  const mapping = APF3_MODEL.scenario.climates[feature];
+  if (!mapping) return 0;
+  return mapping.intercept + mapping.slope * anomaly;
+}
+
+function precipitation(feature: Apf3Feature, anomaly: number): number {
+  return Math.max(0, climateValue(feature, anomaly));
+}
+
 export function buildApf3Features(input: SimulationInput): Apf3Features {
   const anomaly = anomalyOf(input);
-  const tempEneAbr = 0.7 * anomaly;
-  const tempMayJul = 0.2 * anomaly;
-  const tempAgoDicPrev = 0.1 * anomaly;
-  const precipEneAbr = Math.max(0, NEUTRAL_PRECIP_ENE_ABR + 1.5 * anomaly);
-  const precipMayJul = Math.max(0, NEUTRAL_PRECIP_MAY_JUL + 0.15 * anomaly);
+  const baseYield = input.crop.baseYieldTHa;
 
   return {
-    temp_ene_abr: tempEneAbr,
-    temp_may_jul: tempMayJul,
-    temp_ago_dic_prev: tempAgoDicPrev,
-    precip_ene_abr: precipEneAbr,
-    precip_may_jul: precipMayJul,
-    temp_x_precip: tempEneAbr * precipEneAbr,
-    rend_media_previa: input.crop.baseYieldTHa,
+    oni_djf_previo: anomaly,
+    anom_tmax_ene_mar: climateValue("anom_tmax_ene_mar", anomaly),
+    anom_tmean_abr_jun: climateValue("anom_tmean_abr_jun", anomaly),
+    precip_ene_mar_prev: precipitation("precip_ene_mar_prev", anomaly),
+    rend_prev: baseYield,
+    rend_media_hist: baseYield,
+    n_campanas_previas: input.farm.historyYears,
     hectareas: input.farm.hectares,
+    oni_djf_cosecha: anomaly,
+    anom_tmean_set_nov: climateValue("anom_tmean_set_nov", anomaly),
+    hr_set_nov: climateValue("hr_set_nov", anomaly),
+    precip_ene_mar_cosecha: precipitation("precip_ene_mar_cosecha", anomaly),
   };
 }

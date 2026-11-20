@@ -1,71 +1,131 @@
 {
-  "version": "agropredic-apf3-ridge-v1.0",
-  "algorithm": "StandardScaler + Ridge(alpha=3.0)",
+  "version": "agropredic-apf3-ridge-v2.0",
+  "algorithm": "StandardScaler + Ridge(alpha=10.0)",
   "target": "rend_t_ha",
   "features": [
-    "temp_ene_abr",
-    "temp_may_jul",
-    "temp_ago_dic_prev",
-    "precip_ene_abr",
-    "precip_may_jul",
-    "temp_x_precip",
-    "rend_media_previa",
-    "hectareas"
+    "oni_djf_previo",
+    "anom_tmax_ene_mar",
+    "anom_tmean_abr_jun",
+    "precip_ene_mar_prev",
+    "rend_prev",
+    "rend_media_hist",
+    "n_campanas_previas",
+    "hectareas",
+    "oni_djf_cosecha",
+    "anom_tmean_set_nov",
+    "hr_set_nov",
+    "precip_ene_mar_cosecha"
   ],
   "means": [
-    0.32261510791366893,
-    0.1647290167865707,
-    0.1540014388489209,
-    2.229478417266186,
-    0.857122302158272,
-    1.8579916771582714,
-    15.472707734293799,
-    69.10071942446044
+    -0.09259259259259259,
+    0.1012037037037037,
+    0.12276543209876538,
+    3.460493827160494,
+    19.57827160493827,
+    19.11895679012345,
+    9.950617283950617,
+    123.64197530864197,
+    -0.05246913580246916,
+    0.11711111111111118,
+    69.73254320987652,
+    3.306790123456792
   ],
   "scales": [
-    0.5512199177473465,
-    0.25433221150751684,
-    0.24769901960741872,
-    2.1464634933562627,
-    0.4171783335943986,
-    3.5364289602339705,
-    0.9598043455257963,
-    28.583160249387074
+    1.0440634976406478,
+    1.0779867044857327,
+    0.6754001698418087,
+    11.169410155103305,
+    2.3292163627500044,
+    1.308577152788315,
+    6.386523686963486,
+    76.70245680582053,
+    1.0477607290520567,
+    0.6337076671521399,
+    2.790140244049794,
+    10.479180573840775
   ],
   "coefficients": [
-    -0.3143848449660162,
-    -0.1650251288095701,
-    -0.04431466207680161,
-    -0.4345294061288235,
-    -0.030160218797781843,
-    -0.4591705911629156,
-    0.5339345384680583,
-    0.27993835773424963
+    -0.4847906724721594,
+    -0.0467064318874873,
+    -0.2942681606636008,
+    -0.08633212595704495,
+    0.3536175274591225,
+    0.6229006649973807,
+    0.42068978209422025,
+    -0.07954503078867836,
+    -0.4233418008140483,
+    -0.2666870197133304,
+    0.23697428434587167,
+    -0.5186061201663887
   ],
-  "intercept": 15.425611510791368,
+  "intercept": 19.680246913580245,
   "residuals": {
-    "q10": -0.631,
-    "q90": 1.37
+    "q10": -1.9744,
+    "q90": 2.0718
   },
   "metrics": {
-    "maeValidation": 0.788,
-    "rmseValidation": 0.993,
-    "mapeValidation": 5.341,
-    "r2Validation": 0.746,
-    "maeTest": 0.628,
-    "rmseTest": 0.82,
-    "mapeTest": 4.012,
-    "r2Test": 0.823,
-    "coveragePct": 86.7
+    "maeValidation": 1.2887,
+    "rmseValidation": 1.5846,
+    "mapeValidation": 6.69,
+    "r2Validation": 0.5272,
+    "maeTest": 1.5023,
+    "rmseTest": 1.7652,
+    "mapeTest": 7.78,
+    "r2Test": 0.4314,
+    "coveragePct": 79.0
   },
   "training": {
-    "records": 139,
-    "farms": 6,
-    "campaigns": "2001-2026",
+    "records": 162,
+    "farms": 10,
+    "campaigns": "2001-2025",
     "missing": 0,
     "duplicates": 0,
-    "meanYield": 15.43,
-    "stdYield": 1.68,
+    "meanYield": 19.68,
+    "stdYield": 2.312,
     "source": "synthetic"
+  },
+  "scenario": {
+    "climates": {
+      "oni_djf_previo": {
+        "driver": "oni_djf_previo",
+        "intercept": 0.0,
+        "slope": 1.0
+      },
+      "anom_tmax_ene_mar": {
+        "driver": "oni_djf_previo",
+        "intercept": 0.18085,
+        "slope": 0.860181
+      },
+      "anom_tmean_abr_jun": {
+        "driver": "oni_djf_previo",
+        "intercept": 0.173057,
+        "slope": 0.543151
+      },
+      "precip_ene_mar_prev": {
+        "driver": "oni_djf_previo",
+        "intercept": 3.445229,
+        "slope": -0.164859
+      },
+      "oni_djf_cosecha": {
+        "driver": "oni_djf_cosecha",
+        "intercept": 0.0,
+        "slope": 1.0
+      },
+      "anom_tmean_set_nov": {
+        "driver": "oni_djf_cosecha",
+        "intercept": 0.139298,
+        "slope": 0.422855
+      },
+      "hr_set_nov": {
+        "driver": "oni_djf_cosecha",
+        "intercept": 69.795561,
+        "slope": 1.201045
+      },
+      "precip_ene_mar_cosecha": {
+        "driver": "oni_djf_cosecha",
+        "intercept": 3.297346,
+        "slope": -0.180002
+      }
+    }
   }
 }

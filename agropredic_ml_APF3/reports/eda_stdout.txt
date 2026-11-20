@@ -1,0 +1,114 @@
+{
+ "precip_pct_meses_cero": 93.4,
+ "precip_max_mm": 38.0,
+ "precip_meses_mayor_5mm": 3,
+ "objetivo": {
+  "n": 162,
+  "media": 19.68,
+  "sd": 2.31,
+  "min": 11.94,
+  "p25": 18.36,
+  "mediana": 19.76,
+  "p75": 21.28,
+  "max": 25.21,
+  "asimetria": -0.3,
+  "curtosis_exceso": 0.34,
+  "cv_pct": 11.7
+ },
+ "shapiro_rend_idx": {
+  "W": 0.967,
+  "p": 0.0007
+ },
+ "kruskal_variedad": {
+  "H": 23.28,
+  "p": 3.53e-05
+ },
+ "pct_varianza_entre_fundos": 23.2,
+ "kruskal_enso": {
+  "H": 9.61,
+  "p": 0.00817
+ },
+ "mw_fuerte_vs_neutro": {
+  "U": 732.0,
+  "p_unilateral": 0.0016,
+  "mediana_fuerte": 96.2,
+  "mediana_neutro": 101.7,
+  "diferencia_puntos": -5.5,
+  "cliff_delta": -0.39
+ },
+ "clase_enso_tabla": [
+  {
+   "clase": "Neutro/Niña",
+   "registros": 105,
+   "campanas": 16,
+   "media_idx": 100.7,
+   "mediana_idx": 101.7,
+   "sd_idx": 10.6,
+   "media_t_ha": 19.87
+  },
+  {
+   "clase": "Niño débil",
+   "registros": 34,
+   "campanas": 6,
+   "media_idx": 100.6,
+   "mediana_idx": 99.6,
+   "sd_idx": 7.1,
+   "media_t_ha": 19.59
+  },
+  {
+   "clase": "Niño moderado/fuerte",
+   "registros": 23,
+   "campanas": 3,
+   "media_idx": 95.7,
+   "mediana_idx": 96.2,
+   "sd_idx": 6.6,
+   "media_t_ha": 18.96
+  }
+ ],
+ "campanas_nino_fuerte": [
+  "2009-2010",
+  "2015-2016",
+  "2023-2024"
+ ],
+ "idx_medio_2016-2017": 75.5,
+ "idx_medio_2017-2018": 99.4,
+ "vif": {
+  "oni_djf_previo": 15.71,
+  "anom_tmax_ene_mar": 8.69,
+  "anom_tmean_abr_jun": 9.26,
+  "precip_ene_mar_prev": 3.32,
+  "rend_prev": 2.79,
+  "rend_media_hist": 2.71,
+  "oni_djf_cosecha": 5.07,
+  "anom_tmean_set_nov": 7.14,
+  "hr_set_nov": 2.63,
+  "precip_ene_mar_cosecha": 1.58,
+  "hectareas": 1.5,
+  "anio_inicio": 2.08
+ },
+ "spearman_idx_anom_tmean_set_nov": {
+  "rho": -0.47,
+  "p": 2.76e-10
+ },
+ "spearman_idx_anom_tmax_ene_mar": {
+  "rho": -0.484,
+  "p": 7.15e-11
+ },
+ "pendiente_pos": -14.09,
+ "pendiente_neg": 1.72,
+ "panel": {
+  "registros": 162,
+  "fundos": 10,
+  "campanas": 25,
+  "campanas_por_fundo_min": 5,
+  "campanas_por_fundo_max": 25,
+  "variedades": {
+   "Red Globe": 92,
+   "Thompson Seedless": 42,
+   "Sweet Globe": 20,
+   "Crimson Seedless": 8
+  }
+ }
+}
+REZAGO: [(0, -0.365, 0.073), (1, -0.319, 0.121), (2, -0.55, 0.004), (3, -0.51, 0.009), (4, -0.483, 0.015), (5, -0.55, 0.004), (6, -0.341, 0.095), (7, -0.55, 0.004), (8, -0.552, 0.004), (9, -0.601, 0.001), (10, -0.514, 0.009), (11, -0.546, 0.005), (12, -0.495, 0.012)] rcrit 0.396
+SPEARMAN-OBJ: {'oni_djf_previo': -0.424, 'anom_tmax_ene_mar': -0.399, 'anom_tmean_abr_jun': -0.418, 'precip_ene_mar_prev': -0.297, 'rend_prev': 0.5, 'rend_media_hist': 0.455, 'oni_djf_cosecha': -0.237, 'anom_tmean_set_nov': -0.343, 'hr_set_nov': -0.231, 'precip_ene_mar_cosecha': -0.289, 'hectareas': -0.222, 'anio_inicio': 0.195}

@@ -1,18 +1,28 @@
 import model from "./model.json";
 
 export const APF3_FEATURES = [
-  "temp_ene_abr",
-  "temp_may_jul",
-  "temp_ago_dic_prev",
-  "precip_ene_abr",
-  "precip_may_jul",
-  "temp_x_precip",
-  "rend_media_previa",
+  "oni_djf_previo",
+  "anom_tmax_ene_mar",
+  "anom_tmean_abr_jun",
+  "precip_ene_mar_prev",
+  "rend_prev",
+  "rend_media_hist",
+  "n_campanas_previas",
   "hectareas",
+  "oni_djf_cosecha",
+  "anom_tmean_set_nov",
+  "hr_set_nov",
+  "precip_ene_mar_cosecha",
 ] as const;
 
 export type Apf3Feature = (typeof APF3_FEATURES)[number];
 export type Apf3Features = Record<Apf3Feature, number>;
+
+export interface Apf3ClimateMapping {
+  driver: string;
+  intercept: number;
+  slope: number;
+}
 
 export interface Apf3Model {
   version: string;
@@ -44,6 +54,9 @@ export interface Apf3Model {
     meanYield: number;
     stdYield: number;
     source: string;
+  };
+  scenario: {
+    climates: Record<string, Apf3ClimateMapping>;
   };
 }
 

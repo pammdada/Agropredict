@@ -10,8 +10,15 @@ import { buildApf3Features } from "./features";
 import { APF3_MODEL, featureContribution, predictYieldFromFeatures, type Apf3Feature } from "./model";
 
 const MONTHS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Dic"];
-const THERMAL_FEATURES: Apf3Feature[] = ["temp_ene_abr", "temp_may_jul", "temp_ago_dic_prev"];
-const WATER_FEATURES: Apf3Feature[] = ["precip_ene_abr", "precip_may_jul", "temp_x_precip"];
+const HISTORY_FEATURES: Apf3Feature[] = ["rend_prev", "rend_media_hist", "n_campanas_previas"];
+const THERMAL_FEATURES: Apf3Feature[] = [
+  "oni_djf_previo",
+  "anom_tmax_ene_mar",
+  "anom_tmean_abr_jun",
+  "oni_djf_cosecha",
+  "anom_tmean_set_nov",
+];
+const WATER_FEATURES: Apf3Feature[] = ["precip_ene_mar_prev", "hr_set_nov", "precip_ene_mar_cosecha"];
 
 const round = (n: number, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
 
@@ -95,7 +102,7 @@ export const apf3Engine: SimulationEngine = {
       outcome("pessimistic", "Pesimista", pessimistic, baseline),
     ] as [ScenarioOutcome, ScenarioOutcome, ScenarioOutcome];
 
-    const history = featureContribution("rend_media_previa", features);
+    const history = HISTORY_FEATURES.reduce((sum, name) => sum + featureContribution(name, features), 0);
     const scale = featureContribution("hectareas", features);
     const thermal = THERMAL_FEATURES.reduce((sum, name) => sum + featureContribution(name, features), 0);
     const water = WATER_FEATURES.reduce((sum, name) => sum + featureContribution(name, features), 0);
@@ -105,19 +112,19 @@ export const apf3Engine: SimulationEngine = {
         "Historial productivo del fundo",
         history,
         baseline,
-        `Rendimiento base del fundo frente al promedio del dataset (${APF3_MODEL.training.meanYield.toFixed(1)} t/ha).`,
+        `Rendimiento previo, media histórica y experiencia del fundo frente al promedio del dataset (${APF3_MODEL.training.meanYield.toFixed(1)} t/ha).`,
       ),
       factor(
-        "Estrés térmico en floración y brotación",
+        "Estrés térmico y señal ENSO",
         thermal,
         baseline,
-        "Anomalías de temperatura en floración, brotación y verano previo.",
+        "Anomalías de temperatura en verano, floración y maduración, junto con el ONI previo y de cosecha.",
       ),
       factor(
-        "Lluvias e interacción calor-lluvia",
+        "Lluvias y humedad en floración",
         water,
         baseline,
-        "Precipitación y su interacción con la temperatura; recoge parte del efecto Niño.",
+        "Precipitación de verano y humedad relativa durante la floración y la cosecha.",
       ),
       factor("Escala del fundo", scale, baseline, "Tamaño del fundo frente al promedio de las parcelas de entrenamiento."),
     ].sort((a, b) => Math.abs(b.impactPct) - Math.abs(a.impactPct));
